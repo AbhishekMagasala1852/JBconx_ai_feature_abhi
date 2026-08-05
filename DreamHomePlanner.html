@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🏠 Click. Connect. Construct. Craft.</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --navy: #0d2157;
+      --navy-mid: #1a3a8c;
+      --navy-light: #2a52b5;
+      --accent: #4a7fd4;
+      --accent-glow: #5e93e8;
+      --sky: #e8f0fd;
+      --white: #ffffff;
+      --off-white: #f4f7fe;
+      --text-dark: #0d1f4c;
+      --text-mid: #3a4f7a;
+      --text-light: #8094c0;
+      --card-bg: #ffffff;
+      --card-border: #d2ddf7;
+      --input-bg: #f4f7fe;
+      --input-border: #b0c2ef;
+      --shadow: 0 8px 32px rgba(13, 33, 87, 0.10);
+      --shadow-md: 0 16px 48px rgba(13, 33, 87, 0.16);
+      --radius: 18px;
+      --radius-sm: 10px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --navy: #000000;
+      --navy-mid: #111111;
+      --navy-light: #222222;
+      --accent: #4a7fd4;
+      --accent-glow: #5e93e8;
+      --sky: #080808;
+      --white: #000000;
+      --off-white: #050505;
+      --text-dark: #fbf7f7;
+      --text-mid: #cccccc;
+      --text-light: #999999;
+      --card-bg: #111111;
+      --card-border: #222222;
+      --input-bg: #1a1a1a;
+      --input-border: #333333;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.9);
+      --shadow-md: 0 16px 48px rgba(26, 58, 140, 0.95);
+    }
+
+    /* ===== RESET & BASE ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--off-white);
+      color: var(--text-dark);
+      min-height: 100vh;
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--navy-light) 100%);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: var(--off-white);
+      clip-path: ellipse(55% 100% at 50% 100%);
+      transition: background var(--transition);
+    }
+
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 56px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-emoji {
+      font-size: 3.6rem;
+      display: block;
+      margin-bottom: 10px;
+      animation: float 3.5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    header h1 {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      color: #fbf7f7;
+      letter-spacing: 1px;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      cursor: default;
+      position: relative;
+      display: inline-block;
+    }
+
+    header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 5%;
+      width: 90%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(251, 247, 247, 0.8), transparent);
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    header h1:hover {
+      transform: scale(1.05);
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6);
+    }
+
+    header h1:hover::after {
+      width: 100%;
+      left: 0;
+      background: linear-gradient(90deg, transparent, #ffffff, transparent);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+    header p {
+      color: rgba(255, 255, 255, 0.80);
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    /* ===== TOGGLE ===== */
+    .toggle-wrap {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      z-index: 10;
+    }
+
+    #themeToggle {
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.30);
+      border-radius: 50px;
+      padding: 8px 18px;
+      cursor: pointer;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: background var(--transition), border-color var(--transition);
+      white-space: nowrap;
+    }
+
+    #themeToggle:hover {
+      background: rgba(255, 255, 255, 0.28);
+      border-color: rgba(255, 255, 255, 0.55);
+    }
+
+    /* ===== MAIN ===== */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 20px 20px 60px;
+    }
+
+    /* ===== ERROR MESSAGE ===== */
+    #errorMessage {
+      display: none;
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border-left: 5px solid #dc2626;
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+      animation: slideUp 0.5s ease both;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .q-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-right: 12px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(26, 58, 140, 0.30);
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .card-emoji {
+      margin-left: auto;
+      font-size: 1.8rem;
+      opacity: 0.75;
+    }
+
+    .field-label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ===== SIZE CARDS ===== */
+    .size-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .size-card {
+      position: relative;
+    }
+
+    .size-card input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .size-card label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 18px 10px;
+      border-radius: var(--radius-sm);
+      border: 2.5px solid var(--card-border);
+      background: var(--input-bg);
+      cursor: pointer;
+      transition: all var(--transition);
+      text-align: center;
+    }
+
+    .size-card label .size-icon {
+      font-size: 2rem;
+    }
+
+    .size-card label .size-name {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    .size-card label .size-desc {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .size-card input[type="radio"]:checked+label {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(74, 127, 212, 0.10), rgba(94, 147, 232, 0.05));
+      box-shadow: 0 0 0 4px rgba(74, 127, 212, 0.15);
+    }
+
+    .size-card label:hover {
+      border-color: var(--accent-glow);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(74, 127, 212, 0.15);
+    }
+
+    /* ===== DOORS ===== */
+    .doors-section {
+      background: var(--sky);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin-top: 8px;
+      border: 1.5px solid var(--card-border);
+    }
+
+    .doors-section-title {
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: var(--text-mid);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .compass-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .door-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--input-border);
+      background: var(--card-bg);
+      cursor: pointer;
+      transition: all var(--transition);
+      user-select: none;
+    }
+
+    .door-option:hover {
+      border-color: var(--accent);
+      background: rgba(74, 127, 212, 0.06);
+    }
+
+    .door-option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .door-dir-icon {
+      font-size: 1.4rem;
+    }
+
+    .door-dir-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    .door-option.checked {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(74, 127, 212, 0.10), rgba(74, 127, 212, 0.03));
+    }
+
+    /* ===== INPUTS ===== */
+    select,
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--text-dark);
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      transition: all var(--transition);
+    }
+
+    select:focus,
+    input:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      background: var(--card-bg);
+      box-shadow: 0 0 0 4px rgba(74, 127, 212, 0.18);
+    }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+
+    .prefix-input-wrap {
+      position: relative;
+    }
+
+    .prefix-input-wrap .prefix {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-weight: 800;
+      color: var(--accent);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+
+    .prefix-input-wrap input {
+      padding-left: 36px;
+    }
+
+    .input-hint {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      margin-top: 7px;
+      font-weight: 600;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-wrap {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    #showPlanBtn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(135deg, #04060b 0%, #0f192c 50%, #0b316e 100%);
+      color: #fff;
+      border: none;
+      border-radius: 60px;
+      padding: 20px 56px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(26, 58, 140, 0.45);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #showPlanBtn:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 16px 48px rgba(26, 58, 140, 0.55);
+      filter: brightness(1.08);
+    }
+
+    #showPlanBtn:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    .btn-icon {
+      font-size: 1.5rem;
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.18);
+      }
+    }
+
+    .confirm-btn {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: #fff;
+      border: none;
+      border-radius: 60px;
+      padding: 16px 40px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(34, 197, 94, 0.45);
+      transition: all 0.2s ease;
+      margin-top: 15px;
+    }
+
+    .confirm-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 16px 48px rgba(34, 197, 94, 0.55);
+    }
+
+    .change-btn {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #fff;
+      border: none;
+      border-radius: 60px;
+      padding: 16px 40px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(245, 158, 11, 0.45);
+      transition: all 0.2s ease;
+      margin-top: 15px;
+      margin-left: 10px;
+    }
+
+    .change-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 16px 48px rgba(245, 158, 11, 0.55);
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ===== COLOR BUTTONS ===== */
+    .color-btn {
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+      color: white;
+      margin: 5px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .color-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .color-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* ===== RESULT PANEL ===== */
+    #resultPanel {
+      display: none;
+      background: var(--card-bg);
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      margin-top: 28px;
+      box-shadow: var(--shadow-md);
+      animation: slideUp 0.45s ease both;
+    }
+
+    #resultPanel h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--navy-mid);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .result-item {
+      background: var(--sky);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      border: 1.5px solid var(--card-border);
+    }
+
+    .result-item .res-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+    }
+
+    .result-item .res-value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .result-note {
+      margin-top: 18px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, rgba(74, 127, 212, 0.10), rgba(94, 147, 232, 0.05));
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--accent);
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-mid);
+      line-height: 1.5;
+    }
+
+    /* ===== 3D HOUSE SECTION ===== */
+    #threeDContainer {
+      display: none;
+      margin-top: 28px;
+      animation: slideUp 0.45s ease both;
+    }
+
+    #threeDContainer h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--navy-mid);
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .three-d-wrapper {
+      background: var(--card-bg);
+      border: 3px solid var(--accent);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: border-color 0.3s ease;
+    }
+
+    .three-d-wrapper iframe {
+      display: block;
+      width: 100%;
+      height: 500px;
+      border: none;
+    }
+
+    /* ===== COLOR CONTROLS ===== */
+    #colorControls {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      padding: 20px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1.5px solid var(--card-border);
+    }
+
+    #colorControls h4 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 15px;
+    }
+
+    .color-btn-wrap {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      padding: 28px 20px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 540px) {
+      .card {
+        padding: 22px 18px;
+      }
+
+      .size-options {
+        grid-template-columns: 1fr;
+      }
+
+      .compass-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #showPlanBtn {
+        padding: 18px 36px;
+        font-size: 1.1rem;
+      }
+
+      .three-d-wrapper iframe {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="toggle-wrap">
+      <button id="themeToggle" aria-label="Toggle dark mode">
+        <span class="toggle-icon" id="toggleIcon">🌙</span>
+        <span id="toggleLabel">Dark Mode</span>
+      </button>
+    </div>
+    <div class="header-inner">
+      <span class="header-emoji">🏠</span>
+      <h1>Click. Connect. Construct. Craft.</h1>
+      <p>Answer 4 quick questions and we'll craft your perfect plan! 🌟</p>
+    </div>
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main>
+    <!-- Error Message -->
+    <div id="errorMessage">⚠️ Please fill in ALL the details before seeing your plan!</div>
+
+    <form id="plannerForm" novalidate>
+
+      <!-- ====== Q1: House Size + Door Faces ====== -->
+      <div class="card">
+        <div class="card-title-row">
+          <span class="q-badge">1</span>
+          <span class="card-title">House Construction Size &amp; Door Placement</span>
+          <span class="card-emoji">📐</span>
+        </div>
+
+        <label class="field-label">Choose your house size</label>
+        <div class="size-options">
+          <div class="size-card">
+            <input type="radio" name="houseSize" id="sizeSmall" value="Small" />
+            <label for="sizeSmall">
+              <span class="size-icon">🏡</span>
+              <span class="size-name">Small</span>
+              <span class="size-desc">Up to 1,000 sq ft</span>
+            </label>
+          </div>
+          <div class="size-card">
+            <input type="radio" name="houseSize" id="sizeMedium" value="Medium" checked />
+            <label for="sizeMedium">
+              <span class="size-icon">🏠</span>
+              <span class="size-name">Medium</span>
+              <span class="size-desc">1,000 – 2,500 sq ft</span>
+            </label>
+          </div>
+          <div class="size-card">
+            <input type="radio" name="houseSize" id="sizeBig" value="Big" />
+            <label for="sizeBig">
+              <span class="size-icon">🏰</span>
+              <span class="size-name">Big</span>
+              <span class="size-desc">2,500+ sq ft</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="doors-section">
+          <p class="doors-section-title">🚪 Select which faces will have doors</p>
+          <div class="compass-grid">
+            <label class="door-option" id="labelNorth" for="doorNorth">
+              <input type="checkbox" id="doorNorth" name="doors" value="North" />
+              <span class="door-dir-icon">⬆️</span>
+              <span class="door-dir-name">North</span>
+            </label>
+            <label class="door-option" id="labelSouth" for="doorSouth">
+              <input type="checkbox" id="doorSouth" name="doors" value="South" checked />
+              <span class="door-dir-icon">⬇️</span>
+              <span class="door-dir-name">South</span>
+            </label>
+            <label class="door-option" id="labelEast" for="doorEast">
+              <input type="checkbox" id="doorEast" name="doors" value="East" />
+              <span class="door-dir-icon">➡️</span>
+              <span class="door-dir-name">East</span>
+            </label>
+            <label class="door-option" id="labelWest" for="doorWest">
+              <input type="checkbox" id="doorWest" name="doors" value="West" />
+              <span class="door-dir-icon">⬅️</span>
+              <span class="door-dir-name">West</span>
+            </label>
+          </div>
+
+          <div style="margin-top:14px;">
+            <label class="field-label" for="totalDoors">Total number of main doors</label>
+            <div class="select-wrap">
+              <select id="totalDoors" name="totalDoors">
+                <option value="1">1 Door</option>
+                <option value="2" selected>2 Doors</option>
+                <option value="3">3 Doors</option>
+                <option value="4">4 Doors</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== Q2: Budget ====== -->
+      <div class="card">
+        <div class="card-title-row">
+          <span class="q-badge">2</span>
+          <span class="card-title">What's Your Budget?</span>
+          <span class="card-emoji">💰</span>
+        </div>
+        <label class="field-label" for="budget">Enter your total budget</label>
+        <div class="prefix-input-wrap">
+          <span class="prefix">₹</span>
+          <input type="text" id="budget" name="budget" placeholder="e.g. 2500000" inputmode="numeric" />
+        </div>
+        <p class="input-hint">💡 Tip: Type digits only — we'll format it for you!</p>
+      </div>
+
+      <!-- ====== Q3: Project Duration ====== -->
+      <div class="card">
+        <div class="card-title-row">
+          <span class="q-badge">3</span>
+          <span class="card-title">Project Duration</span>
+          <span class="card-emoji">📅</span>
+        </div>
+        <label class="field-label" for="duration">How many months for construction?</label>
+        <input type="number" id="duration" name="duration" placeholder="e.g. 12" min="1" max="120" />
+        <p class="input-hint">🏗️ Average home build takes 6 – 18 months</p>
+      </div>
+
+      <!-- ====== Q4: Restricted Areas ====== -->
+      <div class="card">
+        <div class="card-title-row">
+          <span class="q-badge">4</span>
+          <span class="card-title">Restricted / No-Go Areas</span>
+          <span class="card-emoji">🚫</span>
+        </div>
+        <label class="field-label" for="restricted">Describe any areas to avoid</label>
+        <textarea id="restricted" name="restricted" rows="3"
+          placeholder="e.g. No construction near the old tree..."></textarea>
+        <p class="input-hint">✏️ Write as many or as few restrictions as you'd like</p>
+      </div>
+
+      <!-- ====== SUBMIT ====== -->
+      <div class="btn-wrap">
+        <button type="submit" id="showPlanBtn">
+          <span class="btn-icon">✨</span>
+          SHOW MY PLAN
+          <span class="btn-icon">🏠</span>
+        </button>
+      </div>
+
+    </form>
+
+    <!-- ====== RESULT PANEL (2D PLAN) ====== -->
+    <div id="resultPanel" role="region" aria-live="polite">
+      <h2>📐 Your 2D House Plan</h2>
+
+      <!-- Plan Image -->
+      <div id="planImageContainer" style="text-align: center; margin-bottom: 20px;">
+        <img id="planImage" src="" alt="House Plan"
+          style="max-width: 100%; border-radius: var(--radius-sm); border: 2px solid var(--card-border);" />
+      </div>
+
+      <!-- Plan Details -->
+      <div class="result-grid" id="resultGrid"></div>
+      <div class="result-note" id="resultNote"></div>
+
+      <!-- Action Buttons -->
+      <div class="btn-group">
+        <button class="confirm-btn" id="confirmBtn">✅ YES, Build This House!</button>
+        <button class="change-btn" id="changeBtn">🔄 Change My Answers</button>
+      </div>
+    </div>
+
+    <!-- ====== 3D HOUSE SECTION ====== -->
+    <div id="threeDContainer">
+      <h3>🏠 Your 3D Dream Home</h3>
+      <div class="three-d-wrapper" id="threeDWrapper">
+        <iframe id="threeDFrame" src="" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+      </div>
+
+      <!-- Color Controls -->
+      <div id="colorControls">
+        <h4>🎨 Customize Your House Color!</h4>
+        <div class="color-btn-wrap">
+          <button class="color-btn" style="background:#ef4444;" data-color="#ef4444">🔴 Red</button>
+          <button class="color-btn" style="background:#3b82f6;" data-color="#3b82f6">🔵 Blue</button>
+          <button class="color-btn" style="background:#22c55e;" data-color="#22c55e">🟢 Green</button>
+          <button class="color-btn" style="background:#eab308;" data-color="#eab308">🟡 Yellow</button>
+          <button class="color-btn" style="background:#f3f4f6; color:#333;" data-color="#f3f4f6">⚪ White</button>
+          <button class="color-btn" style="background:linear-gradient(135deg, #8b5cf6, #ec4899);"
+            data-color="gradient">🌈 Rainbow</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>Made with ❤️ for your family &nbsp;·&nbsp; My Dream Home Planner © 2026</footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ===== THEME TOGGLE =====
+    const html = document.documentElement;
+    const toggleBtn = document.getElementById('themeToggle');
+    const toggleIcon = document.getElementById('toggleIcon');
+    const toggleLbl = document.getElementById('toggleLabel');
+    const savedTheme = localStorage.getItem('hp_theme') || 'light';
+    applyTheme(savedTheme);
+    toggleBtn.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+      localStorage.setItem('hp_theme', next);
+    });
+    function applyTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      toggleIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      toggleLbl.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+
+    // ===== DOOR HIGHLIGHT =====
+    document.querySelectorAll('.door-option input[type="checkbox"]').forEach(cb => {
+      const label = cb.closest('.door-option');
+      if (cb.checked) label.classList.add('checked');
+      cb.addEventListener('change', () => label.classList.toggle('checked', cb.checked));
+    });
+
+    // ===== BUDGET FORMATTER =====
+    const budgetInput = document.getElementById('budget');
+    budgetInput.addEventListener('input', () => {
+      let val = budgetInput.value.replace(/[^0-9]/g, '');
+      budgetInput.value = val ? Number(val).toLocaleString('en-IN') : '';
+    });
+
+    // ===== PLAN IMAGES =====
+    const planImages = {
+      Small: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiYq0nxISL4cavRH6n_6O1Id0LsgBoONx2s31ron-Lqw&s=10',
+      Medium: 'https://www.dkhomedesignx.com/wp-content/uploads/2021/05/TX83-GROUND-FLOOR_page-0001.jpg',
+      Big: 'https://wpmedia.roomsketcher.com/content/uploads/2021/12/03123714/two-bedroom-house-plan-with-measurements.jpg'
+    };
+
+    // ===== 3D HOUSE LINKS =====
+    const threeDLinks = {
+      Small: 'https://sketchfab.com/models/3e536217e25545448762004ec55f1786/embed',
+      Medium: 'https://sketchfab.com/models/a4cf314ad1f64a1f978f839d3a9f284b/embed',
+      Big: 'https://sketchfab.com/models/cad05724ba58444587df1ac97b1f1097/embed'
+    };
+
+    // ===== FORM SUBMIT =====
+    document.getElementById('plannerForm').addEventListener('submit', e => {
+      e.preventDefault();
+      showPlan();
+    });
+
+    function showPlan() {
+      const errorDiv = document.getElementById('errorMessage');
+      const size = document.querySelector('input[name="houseSize"]:checked');
+      const budget = budgetInput.value.trim();
+      const duration = document.getElementById('duration').value.trim();
+
+      // ===== VALIDATION =====
+      if (!size || !budget || !duration) {
+        errorDiv.style.display = 'block';
+        document.getElementById('resultPanel').style.display = 'none';
+        document.getElementById('threeDContainer').style.display = 'none';
+        document.getElementById('colorControls').style.display = 'none';
+        errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      errorDiv.style.display = 'none';
+      const sizeVal = size.value;
+
+      // ===== SHOW 2D PLAN =====
+      const panel = document.getElementById('resultPanel');
+      panel.style.display = 'block';
+
+      // Show plan image
+      document.getElementById('planImage').src = planImages[sizeVal];
+
+      // Show details
+      const doors = [...document.querySelectorAll('input[name="doors"]:checked')].map(c => c.value);
+      const totalD = document.getElementById('totalDoors').value;
+      const restrict = document.getElementById('restricted').value.trim() || 'None specified';
+      const sqftMap = { Small: 'Up to 1,000 sq ft', Medium: '1,000 – 2,500 sq ft', Big: '2,500+ sq ft' };
+
+      const items = [
+        { label: 'House Size', value: sizeVal + ' (' + sqftMap[sizeVal] + ')' },
+        { label: 'Door Faces', value: doors.length ? doors.join(', ') : 'None selected' },
+        { label: 'Total Doors', value: totalD + (totalD > 1 ? ' doors' : ' door') },
+        { label: 'Budget', value: '₹ ' + budget },
+        { label: 'Duration', value: duration + (duration > 1 ? ' months' : ' month') },
+        { label: 'Restricted Areas', value: restrict },
+      ];
+
+      document.getElementById('resultGrid').innerHTML = items.map(item =>
+        '<div class="result-item"><div class="res-label">' + item.label + '</div><div class="res-value">' + item.value + '</div></div>'
+      ).join('');
+
+      const tips = {
+        Small: '🏡 Cozy and efficient — easier to maintain and very budget-friendly!',
+        Medium: '🏠 A perfect family home — room to grow without the overwhelm!',
+        Big: '🏰 Grand living! Allow extra months in your timeline for finishing touches.'
+      };
+      document.getElementById('resultNote').textContent = '✅ Plan captured! ' + tips[sizeVal];
+
+      // Hide 3D if it was showing
+      document.getElementById('threeDContainer').style.display = 'none';
+      document.getElementById('colorControls').style.display = 'none';
+
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ===== CONFIRM BUTTON (Show 3D) =====
+    document.getElementById('confirmBtn').addEventListener('click', function () {
+      const size = document.querySelector('input[name="houseSize"]:checked');
+      if (!size) return;
+
+      const sizeVal = size.value;
+      const threeDContainer = document.getElementById('threeDContainer');
+      const frame = document.getElementById('threeDFrame');
+
+      // Set the 3D house link
+      frame.src = threeDLinks[sizeVal];
+
+      // Show 3D container
+      threeDContainer.style.display = 'block';
+      document.getElementById('colorControls').style.display = 'block';
+
+      threeDContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // ===== CHANGE BUTTON (Go back to form) =====
+    document.getElementById('changeBtn').addEventListener('click', function () {
+      document.getElementById('resultPanel').style.display = 'none';
+      document.getElementById('threeDContainer').style.display = 'none';
+      document.getElementById('colorControls').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ===== COLOR CHANGE FEATURE =====
+    document.querySelectorAll('.color-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const color = this.dataset.color;
+        const wrapper = document.getElementById('threeDWrapper');
+
+        if (color === 'gradient') {
+          wrapper.style.borderColor = '#8b5cf6';
+          wrapper.style.boxShadow = '0 0 30px rgba(139, 92, 246, 0.5), 0 0 60px rgba(236, 72, 153, 0.3)';
+        } else {
+          wrapper.style.borderColor = color;
+          wrapper.style.boxShadow = '0 0 30px ' + color + '40, 0 8px 32px rgba(0,0,0,0.2)';
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
