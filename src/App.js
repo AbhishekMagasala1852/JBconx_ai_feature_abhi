@@ -3,14 +3,24 @@ import './App.css';
 
 function App() {
   // ===== STATE ===== (This stores all user answers)
-  const [houseSize, setHouseSize] = useState('Medium');
+  // OLD: const [houseSize, setHouseSize] = useState('Medium');
+  // NEW: house size now comes from three sliders instead of a radio pick
+  const [sqft, setSqft] = useState(1500);
+  const [length, setLength] = useState(40);
+  const [width, setWidth] = useState(30);
+
   const [doors, setDoors] = useState(['South']);
   const [totalDoors, setTotalDoors] = useState('2');
+
+  // NEW: floors
+  const [numFloors, setNumFloors] = useState('1');
+  const [floorPlan, setFloorPlan] = useState('Ground Floor');
+
   const [budget, setBudget] = useState('');
   const [duration, setDuration] = useState('');
   const [restricted, setRestricted] = useState('');
   const [showPlan, setShowPlan] = useState(false);
-  
+
   const [showTopError, setShowTopError] = useState(false);
   const [houseColor, setHouseColor] = useState('transparent');
   const [show3D, setShow3D] = useState(false);
@@ -37,12 +47,37 @@ function App() {
     setBudget(formatBudget(e.target.value));
   };
 
+  // ===== FLOORS: names available for the dropdown =====
+  const floorNames = ['Ground Floor', 'First Floor', 'Second Floor', 'Third Floor'];
+
+  // When the number of floors changes, reset the floor-plan dropdown
+  // back to "Ground Floor" so it never points at a floor that no longer exists.
+  const handleNumFloorsChange = (value) => {
+    setNumFloors(value);
+    setFloorPlan(floorNames[0]);
+  };
+
+  const activeFloorOptions = floorNames.slice(0, parseInt(numFloors, 10));
+
+  // ===== HOUSE SIZE (derived from square feet, not chosen directly anymore) =====
+  const getSizeCategory = (value) => {
+    if (value <= 1000) return 'Small';
+    if (value <= 2500) return 'Medium';
+    return 'Big';
+  };
+  const getSqftEmoji = (value) => {
+    if (value <= 1000) return '🏡';
+    if (value <= 2500) return '🏠';
+    return '🏰';
+  };
+  const houseSize = getSizeCategory(sqft);
+
   // ===== SHOW PLAN =====
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Check required fields: houseSize, budget, duration
-    if (!houseSize || !budget || !duration) {
+
+    // Check required fields: sqft, length, width, numFloors, budget, duration
+    if (sqft <= 0 || length <= 0 || width <= 0 || !numFloors || !budget || !duration) {
       setShowTopError(true);
       setShowPlan(false);
       return;
@@ -53,30 +88,12 @@ function App() {
     setShow3D(false);
   };
 
-  const changeTheme = (accentColor, darkTheme) => {
-    document.documentElement.style.setProperty('--accent', accentColor);
-    setDarkMode(darkTheme);
-  };
-
-  // ===== HOUSE SIZE OPTIONS =====
-  const sizes = [
-    { value: 'Small', label: '🏡', name: 'Small', desc: 'Up to 1,000 sq ft' },
-    { value: 'Medium', label: '🏠', name: 'Medium', desc: '1,000 – 2,500 sq ft' },
-    { value: 'Big', label: '🏰', name: 'Big', desc: '2,500+ sq ft' },
-  ];
-
   const doorDirections = [
     { value: 'North', icon: '⬆️' },
     { value: 'South', icon: '⬇️' },
     { value: 'East', icon: '➡️' },
     { value: 'West', icon: '⬅️' },
   ];
-
-  const sqftMap = {
-    Small: 'Up to 1,000 sq ft',
-    Medium: '1,000 – 2,500 sq ft',
-    Big: '2,500+ sq ft'
-  };
 
   const tips = {
     Small: '🏡 Cozy and efficient — easier to maintain and very budget-friendly!',
@@ -115,36 +132,93 @@ function App() {
         {/* ===== FORM ===== */}
         <form onSubmit={handleSubmit}>
 
-          {/* ===== Q1: HOUSE SIZE ===== */}
+          {/* ===== Q1: HOUSE DIMENSIONS, DOORS & FLOORS ===== */}
           <div className="card">
             <div className="card-title-row">
               <span className="q-badge">1</span>
-              <span className="card-title">House Construction Size &amp; Door Placement</span>
+              <span className="card-title">House Dimensions &amp; Size</span>
               <span className="card-emoji">📐</span>
             </div>
 
-            <label className="field-label">Choose your house size</label>
-            <div className="size-options">
-              {sizes.map(size => (
-                <div className="size-card" key={size.value}>
-                  <input
-                    type="radio"
-                    name="houseSize"
-                    id={`size${size.value}`}
-                    value={size.value}
-                    checked={houseSize === size.value}
-                    onChange={(e) => setHouseSize(e.target.value)}
-                  />
-                  <label htmlFor={`size${size.value}`}>
-                    <span className="size-icon">{size.label}</span>
-                    <span className="size-name">{size.name}</span>
-                    <span className="size-desc">{size.desc}</span>
-                  </label>
+            {/* ---- SQUARE FEET SLIDER ---- */}
+            <div className="slider-group" style={{ paddingBottom: '24px' }}>
+              <div className="slider-header" style={{ justifyContent: 'flex-start', gap: '10px' }}>
+                <span style={{ fontSize: '1.2rem' }}>📏</span>
+                <label className="field-label" htmlFor="sqftSlider" style={{ marginBottom: 0 }}>Square Feet:</label>
+                <input
+                  type="range"
+                  id="sqftSlider"
+                  className="custom-slider"
+                  min="0"
+                  max="5000"
+                  step="10"
+                  value={sqft}
+                  onChange={(e) => setSqft(parseInt(e.target.value, 10))}
+                  style={{ flex: 1, margin: '0 10px' }}
+                />
+                <span className="slider-value" style={{ minWidth: '70px', textAlign: 'center' }}>
+                  {sqft.toLocaleString('en-US')} sq ft
+                </span>
+              </div>
+
+              <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                <span style={{ fontSize: '3rem' }}>{getSqftEmoji(sqft)}</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', textAlign: 'center', marginTop: '10px' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '1.1rem' }}>Small 🏡</div>
+                  <div style={{ fontWeight: 'normal', fontSize: '0.8rem' }}>0-1000</div>
                 </div>
-              ))}
+                <div style={{ flex: 1, borderLeft: '1px solid var(--input-border)', borderRight: '1px solid var(--input-border)' }}>
+                  <div style={{ fontSize: '1.1rem' }}>Medium 🏠</div>
+                  <div style={{ fontWeight: 'normal', fontSize: '0.8rem' }}>1001-2500</div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '1.1rem' }}>Big 🏰</div>
+                  <div style={{ fontWeight: 'normal', fontSize: '0.8rem' }}>2501+</div>
+                </div>
+              </div>
             </div>
 
-            {/* DOORS SECTION */}
+            {/* ---- LENGTH + WIDTH SLIDERS ---- */}
+            <div className="slider-group">
+              <div className="slider-header" style={{ justifyContent: 'flex-start', gap: '10px', marginBottom: '20px' }}>
+                <span style={{ fontSize: '1.2rem' }}>📏</span>
+                <label className="field-label" htmlFor="lengthSlider" style={{ marginBottom: 0, width: '60px' }}>Length:</label>
+                <input
+                  type="range"
+                  id="lengthSlider"
+                  className="custom-slider"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value={length}
+                  onChange={(e) => setLength(parseInt(e.target.value, 10))}
+                  style={{ flex: 1, margin: '0 10px' }}
+                />
+                <span className="slider-value" style={{ minWidth: '50px', textAlign: 'right' }}>{length} ft</span>
+              </div>
+
+              <div className="slider-header" style={{ justifyContent: 'flex-start', gap: '10px', marginBottom: 0 }}>
+                <span style={{ fontSize: '1.2rem' }}>📏</span>
+                <label className="field-label" htmlFor="widthSlider" style={{ marginBottom: 0, width: '60px' }}>Width:</label>
+                <input
+                  type="range"
+                  id="widthSlider"
+                  className="custom-slider"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value={width}
+                  onChange={(e) => setWidth(parseInt(e.target.value, 10))}
+                  style={{ flex: 1, margin: '0 10px' }}
+                />
+                <span className="slider-value" style={{ minWidth: '50px', textAlign: 'right' }}>{width} ft</span>
+              </div>
+            </div>
+
+            {/* DOORS SECTION (unchanged from before) */}
             <div className="doors-section">
               <p className="doors-section-title">🚪 Select which faces will have doors</p>
               <div className="compass-grid">
@@ -180,9 +254,45 @@ function App() {
                 </div>
               </div>
             </div>
+
+            {/* ---- FLOORS SECTION (new) ---- */}
+            <div className="doors-section" style={{ marginTop: '20px' }}>
+              <p className="doors-section-title">🏗️ Floors &amp; Levels</p>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px' }}>
+                <label className="field-label" style={{ marginBottom: 0 }}>Number of Floors:</label>
+                <div className="floor-buttons" style={{ flex: 1, display: 'flex', gap: '10px' }}>
+                  {['1', '2', '3', '4'].map((n) => (
+                    <button
+                      type="button"
+                      key={n}
+                      onClick={() => handleNumFloorsChange(n)}
+                      className={numFloors === n ? 'floor-btn active' : 'floor-btn'}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <label className="field-label" htmlFor="floorPlanSelect" style={{ marginBottom: 0 }}>Select Floor:</label>
+                <div className="select-wrap" style={{ flex: 1 }}>
+                  <select
+                    id="floorPlanSelect"
+                    value={floorPlan}
+                    onChange={(e) => setFloorPlan(e.target.value)}
+                  >
+                    {activeFloorOptions.map((name) => (
+                      <option key={name} value={name}>{name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* ===== Q2: BUDGET ===== */}
+          {/* ===== Q2: BUDGET (unchanged) ===== */}
           <div className="card">
             <div className="card-title-row">
               <span className="q-badge">2</span>
@@ -203,7 +313,7 @@ function App() {
             <p className="input-hint">💡 Tip: Type digits only — we'll format it for you!</p>
           </div>
 
-          {/* ===== Q3: DURATION ===== */}
+          {/* ===== Q3: DURATION (unchanged) ===== */}
           <div className="card">
             <div className="card-title-row">
               <span className="q-badge">3</span>
@@ -223,7 +333,7 @@ function App() {
             <p className="input-hint">🏗️ Average home build takes 6 – 18 months</p>
           </div>
 
-          {/* ===== Q4: RESTRICTED ===== */}
+          {/* ===== Q4: RESTRICTED (unchanged) ===== */}
           <div className="card">
             <div className="card-title-row">
               <span className="q-badge">4</span>
@@ -256,26 +366,34 @@ function App() {
         {showPlan && (
           <div className="result-panel">
             <h2>🎉 Your Dream Home Plan!</h2>
-            
+
             {/* 2D Plan Image */}
             <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <img 
+              <img
                 src={
-                  houseSize === 'Small' 
-                    ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiYq0nxISL4cavRH6n_6O1Id0LsgBoONx2s31ron-Lqw&s=10' 
-                    : houseSize === 'Medium' 
-                    ? 'https://www.dkhomedesignx.com/wp-content/uploads/2021/05/TX83-GROUND-FLOOR_page-0001.jpg' 
-                    : 'https://wpmedia.roomsketcher.com/content/uploads/2021/12/03123714/two-bedroom-house-plan-with-measurements.jpg'
-                } 
-                alt={`${houseSize} House Plan`} 
-                style={{ maxWidth: '100%', maxHeight: '400px', borderRadius: '10px', border: '2px solid var(--card-border)', objectFit: 'contain' }} 
+                  houseSize === 'Small'
+                    ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiYq0nxISL4cavRH6n_6O1Id0LsgBoONx2s31ron-Lqw&s=10'
+                    : houseSize === 'Medium'
+                      ? 'https://www.dkhomedesignx.com/wp-content/uploads/2021/05/TX83-GROUND-FLOOR_page-0001.jpg'
+                      : 'https://wpmedia.roomsketcher.com/content/uploads/2021/12/03123714/two-bedroom-house-plan-with-measurements.jpg'
+                }
+                alt={`${houseSize} House Plan`}
+                style={{ maxWidth: '100%', maxHeight: '400px', borderRadius: '10px', border: '2px solid var(--card-border)', objectFit: 'contain' }}
               />
             </div>
 
             <div className="result-grid">
               <div className="result-item">
-                <div className="res-label">House Size</div>
-                <div className="res-value">{houseSize} ({sqftMap[houseSize]})</div>
+                <div className="res-label">Square Feet</div>
+                <div className="res-value">{sqft.toLocaleString('en-US')} sq ft ({houseSize})</div>
+              </div>
+              <div className="result-item">
+                <div className="res-label">Dimensions</div>
+                <div className="res-value">{length} ft (L) × {width} ft (W)</div>
+              </div>
+              <div className="result-item">
+                <div className="res-label">Floors</div>
+                <div className="res-value">{numFloors} (Plan: {floorPlan})</div>
               </div>
               <div className="result-item">
                 <div className="res-label">Door Faces</div>
@@ -305,13 +423,13 @@ function App() {
             {/* Action Buttons */}
             {!show3D && (
               <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginTop: '20px', flexWrap: 'wrap' }}>
-                <button 
+                <button
                   type="button"
-                  onClick={() => setShow3D(true)} 
+                  onClick={() => setShow3D(true)}
                   style={{ background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)', color: '#fff', border: 'none', borderRadius: '60px', padding: '16px 40px', fontWeight: '700', cursor: 'pointer', fontSize: '1.1rem', boxShadow: '0 8px 32px rgba(34, 197, 94, 0.45)' }}>
                   ✅ YES, Build This House!
                 </button>
-                <button 
+                <button
                   type="button"
                   onClick={() => { setShowPlan(false); setShow3D(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', color: '#fff', border: 'none', borderRadius: '60px', padding: '16px 40px', fontWeight: '700', cursor: 'pointer', fontSize: '1.1rem', boxShadow: '0 8px 32px rgba(245, 158, 11, 0.45)' }}>
@@ -322,7 +440,7 @@ function App() {
           </div>
         )}
 
-        {/* ===== 3D HOUSE CONTAINER ===== */}
+        {/* ===== 3D HOUSE CONTAINER (unchanged) ===== */}
         {show3D && (
           <div id="threeDContainer" className="three-d-container">
             <h2>🏠 Your 3D Dream Home</h2>
@@ -332,16 +450,16 @@ function App() {
                 houseSize === 'Small'
                   ? 'https://sketchfab.com/models/3e536217e25545448762004ec55f1786/embed'
                   : houseSize === 'Medium'
-                  ? 'https://sketchfab.com/models/a4cf314ad1f64a1f978f839d3a9f284b/embed'
-                  : 'https://sketchfab.com/models/cad05724ba58444587df1ac97b1f1097/embed'
+                    ? 'https://sketchfab.com/models/a4cf314ad1f64a1f978f839d3a9f284b/embed'
+                    : 'https://sketchfab.com/models/cad05724ba58444587df1ac97b1f1097/embed'
               }
               width="100%"
               height="500"
               frameBorder="0"
               allowFullScreen
-              style={{ 
-                border: houseColor !== 'transparent' ? `4px solid ${houseColor}` : 'none', 
-                borderRadius: '8px', 
+              style={{
+                border: houseColor !== 'transparent' ? `4px solid ${houseColor}` : 'none',
+                borderRadius: '8px',
                 transition: 'all 0.3s ease',
                 boxShadow: houseColor !== 'transparent' ? `0 0 30px ${houseColor}40, 0 8px 32px rgba(0,0,0,0.2)` : ''
               }}
@@ -349,18 +467,18 @@ function App() {
           </div>
         )}
 
-        {/* ===== HOUSE COLOR CHANGER ===== */}
+        {/* ===== HOUSE COLOR CHANGER (unchanged) ===== */}
         {show3D && (
           <div id="colorControls" className="color-theme-container" style={{ marginTop: '20px', textAlign: 'center' }}>
-             <h3>🎨 Customize Your House Color!</h3>
-             <div className="color-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginTop: '15px', flexWrap: 'wrap' }}>
-                <button type="button" onClick={() => setHouseColor('#ef4444')} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', transition: 'transform 0.2s' }}>🔴 Red</button>
-                <button type="button" onClick={() => setHouseColor('#3b82f6')} style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', transition: 'transform 0.2s' }}>🔵 Blue</button>
-                <button type="button" onClick={() => setHouseColor('#10b981')} style={{ background: '#10b981', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', transition: 'transform 0.2s' }}>🟢 Green</button>
-                <button type="button" onClick={() => setHouseColor('#eab308')} style={{ background: '#eab308', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', textShadow: '0 0 2px rgba(0,0,0,0.5)', transition: 'transform 0.2s' }}>🟡 Yellow</button>
-                <button type="button" onClick={() => setHouseColor('#ffffff')} style={{ background: '#ffffff', color: '#333', border: '1px solid #ccc', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', transition: 'transform 0.2s' }}>⚪ White</button>
-             </div>
-             <p style={{ marginTop: '10px', fontSize: '0.9rem', color: 'var(--text-light)' }}>✨ Color changes the BORDER of your 3D house viewer!</p>
+            <h3>🎨 Customize Your House Color!</h3>
+            <div className="color-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginTop: '15px', flexWrap: 'wrap' }}>
+              <button type="button" onClick={() => setHouseColor('#ef4444')} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', transition: 'transform 0.2s' }}>🔴 Red</button>
+              <button type="button" onClick={() => setHouseColor('#3b82f6')} style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', transition: 'transform 0.2s' }}>🔵 Blue</button>
+              <button type="button" onClick={() => setHouseColor('#10b981')} style={{ background: '#10b981', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', transition: 'transform 0.2s' }}>🟢 Green</button>
+              <button type="button" onClick={() => setHouseColor('#eab308')} style={{ background: '#eab308', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', textShadow: '0 0 2px rgba(0,0,0,0.5)', transition: 'transform 0.2s' }}>🟡 Yellow</button>
+              <button type="button" onClick={() => setHouseColor('#ffffff')} style={{ background: '#ffffff', color: '#333', border: '1px solid #ccc', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', transition: 'transform 0.2s' }}>⚪ White</button>
+            </div>
+            <p style={{ marginTop: '10px', fontSize: '0.9rem', color: 'var(--text-light)' }}>✨ Color changes the BORDER of your 3D house viewer!</p>
           </div>
         )}
 

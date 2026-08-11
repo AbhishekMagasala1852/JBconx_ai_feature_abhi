@@ -1,0 +1,773 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap');
+
+/* ===== CSS VARIABLES (scoped to this component, not the whole page) ===== */
+.dream-home-planner {
+    --navy: #0d2157;
+    --navy-mid: #1a3a8c;
+    --navy-light: #2a52b5;
+    --accent: #4a7fd4;
+    --accent-glow: #5e93e8;
+    --sky: #e8f0fd;
+    --white: #ffffff;
+    --off-white: #f4f7fe;
+    --text-dark: #0d1f4c;
+    --text-mid: #3a4f7a;
+    --text-light: #8094c0;
+    --card-bg: #ffffff;
+    --card-border: #d2ddf7;
+    --input-bg: #f4f7fe;
+    --input-border: #b0c2ef;
+    --shadow: 0 8px 32px rgba(13, 33, 87, 0.10);
+    --shadow-md: 0 16px 48px rgba(13, 33, 87, 0.16);
+    --radius: 18px;
+    --radius-sm: 10px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    font-family: 'Nunito', sans-serif;
+    background: var(--off-white);
+    color: var(--text-dark);
+    min-height: 100vh;
+    transition: background var(--transition), color var(--transition);
+    overflow-x: hidden;
+}
+
+.dream-home-planner[data-theme='dark'] {
+    --navy: #000000;
+    --navy-mid: #111111;
+    --navy-light: #222222;
+    --accent: #4a7fd4;
+    --accent-glow: #5e93e8;
+    --sky: #080808;
+    --white: #000000;
+    --off-white: #050505;
+    --text-dark: #fbf7f7;
+    --text-mid: #cccccc;
+    --text-light: #999999;
+    --card-bg: #111111;
+    --card-border: #222222;
+    --input-bg: #1a1a1a;
+    --input-border: #333333;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.9);
+    --shadow-md: 0 16px 48px rgba(26, 58, 140, 0.95);
+}
+
+.dream-home-planner * {
+    box-sizing: border-box;
+}
+
+/* ===== HEADER ===== */
+.dream-home-planner header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--navy-light) 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.dream-home-planner header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: var(--off-white);
+    clip-path: ellipse(55% 100% at 50% 100%);
+    transition: background var(--transition);
+}
+
+.dream-home-planner .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 56px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.dream-home-planner .header-emoji {
+    font-size: 3.6rem;
+    display: block;
+    margin-bottom: 10px;
+    animation: dhp-float 3.5s ease-in-out infinite;
+}
+
+@keyframes dhp-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.dream-home-planner header h1 {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    color: #fbf7f7;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    cursor: default;
+    position: relative;
+    display: inline-block;
+}
+
+.dream-home-planner header h1::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 5%;
+    width: 90%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(251, 247, 247, 0.8), transparent);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.dream-home-planner header h1:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6);
+}
+
+.dream-home-planner header h1:hover::after {
+    width: 100%;
+    left: 0;
+    background: linear-gradient(90deg, transparent, #ffffff, transparent);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.dream-home-planner header p {
+    color: rgba(255, 255, 255, 0.80);
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+/* ===== TOGGLE ===== */
+.dream-home-planner .toggle-wrap {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+    z-index: 10;
+}
+
+.dream-home-planner #themeToggle {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.30);
+    border-radius: 50px;
+    padding: 8px 18px;
+    cursor: pointer;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background var(--transition), border-color var(--transition);
+    white-space: nowrap;
+}
+
+.dream-home-planner #themeToggle:hover {
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+/* ===== MAIN ===== */
+.dream-home-planner main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+}
+
+/* ===== ERROR MESSAGE ===== */
+.dream-home-planner #errorMessage {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border-left: 5px solid #dc2626;
+    margin-bottom: 20px;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+/* ===== CARD ===== */
+.dream-home-planner .card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 32px 36px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+    animation: dhp-slideUp 0.5s ease both;
+}
+
+.dream-home-planner .card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+}
+
+@keyframes dhp-slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dream-home-planner .q-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.95rem;
+    margin-right: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(26, 58, 140, 0.30);
+}
+
+.dream-home-planner .card-title-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dream-home-planner .card-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.dream-home-planner .card-emoji {
+    margin-left: auto;
+    font-size: 1.8rem;
+    opacity: 0.75;
+}
+
+.dream-home-planner .field-label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* ===== SLIDERS & FLOORS ===== */
+.dream-home-planner .slider-section {
+    margin-bottom: 24px;
+}
+
+.dream-home-planner .slider-group {
+    background: var(--sky);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 14px;
+}
+
+.dream-home-planner .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.dream-home-planner .slider-header .field-label {
+    margin-bottom: 0;
+}
+
+.dream-home-planner .slider-value {
+    font-weight: 800;
+    color: var(--accent);
+    background: var(--card-bg);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    font-size: 0.9rem;
+}
+
+.dream-home-planner .sqft-emoji-container {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.dream-home-planner .sqft-emoji {
+    font-size: 3rem;
+}
+
+.dream-home-planner .custom-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--input-bg);
+    outline: none;
+    border: 1px solid var(--input-border);
+    padding: 0;
+}
+
+.dream-home-planner .custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dream-home-planner .floor-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.dream-home-planner .floor-buttons input[type='radio'] {
+    display: none;
+}
+
+.dream-home-planner .floor-buttons label {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border: 2px solid var(--input-border);
+    border-radius: var(--radius-sm);
+    background: var(--input-bg);
+    font-weight: 800;
+    cursor: pointer;
+    color: var(--text-mid);
+    transition: all var(--transition);
+}
+
+.dream-home-planner .floor-buttons input[type='radio']:checked+label {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(74, 127, 212, 0.3);
+}
+
+/* ===== DOORS ===== */
+.dream-home-planner .doors-section {
+    background: var(--sky);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    margin-top: 8px;
+    border: 1.5px solid var(--card-border);
+}
+
+.dream-home-planner .doors-section-title {
+    font-weight: 800;
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dream-home-planner .compass-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.dream-home-planner .door-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--input-border);
+    background: var(--card-bg);
+    cursor: pointer;
+    transition: all var(--transition);
+    user-select: none;
+}
+
+.dream-home-planner .door-option:hover {
+    border-color: var(--accent);
+    background: rgba(74, 127, 212, 0.06);
+}
+
+.dream-home-planner .door-option input[type='checkbox'] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.dream-home-planner .door-dir-icon {
+    font-size: 1.4rem;
+}
+
+.dream-home-planner .door-dir-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.dream-home-planner .door-option.checked {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(74, 127, 212, 0.10), rgba(74, 127, 212, 0.03));
+}
+
+/* ===== INPUTS ===== */
+.dream-home-planner select,
+.dream-home-planner input[type='text'],
+.dream-home-planner input[type='number'],
+.dream-home-planner textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--text-dark);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    outline: none;
+    transition: all var(--transition);
+}
+
+.dream-home-planner select:focus,
+.dream-home-planner input:focus,
+.dream-home-planner textarea:focus {
+    border-color: var(--accent);
+    background: var(--card-bg);
+    box-shadow: 0 0 0 4px rgba(74, 127, 212, 0.18);
+}
+
+.dream-home-planner .select-wrap {
+    position: relative;
+}
+
+.dream-home-planner .select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+.dream-home-planner .prefix-input-wrap {
+    position: relative;
+}
+
+.dream-home-planner .prefix-input-wrap .prefix {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 800;
+    color: var(--accent);
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+.dream-home-planner .prefix-input-wrap input {
+    padding-left: 36px;
+}
+
+.dream-home-planner .input-hint {
+    font-size: 0.78rem;
+    color: var(--text-light);
+    margin-top: 7px;
+    font-weight: 600;
+}
+
+/* ===== BUTTONS ===== */
+.dream-home-planner .btn-wrap {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.dream-home-planner #showPlanBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, #04060b 0%, #0f192c 50%, #0b316e 100%);
+    color: #fff;
+    border: none;
+    border-radius: 60px;
+    padding: 20px 56px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(26, 58, 140, 0.45);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.dream-home-planner #showPlanBtn:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 16px 48px rgba(42, 11, 125, 0.275);
+    filter: brightness(1.08);
+}
+
+.dream-home-planner #showPlanBtn:active {
+    transform: translateY(-1px) scale(0.99);
+}
+
+.dream-home-planner .btn-icon {
+    font-size: 1.5rem;
+    animation: dhp-pulse 2s ease infinite;
+}
+
+@keyframes dhp-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.18);
+    }
+}
+
+.dream-home-planner .confirm-btn {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #fff;
+    border: none;
+    border-radius: 60px;
+    padding: 16px 40px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(34, 197, 94, 0.45);
+    transition: all 0.2s ease;
+    margin-top: 15px;
+}
+
+.dream-home-planner .confirm-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 16px 48px rgba(34, 197, 94, 0.55);
+}
+
+.dream-home-planner .change-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #fff;
+    border: none;
+    border-radius: 60px;
+    padding: 16px 40px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(245, 158, 11, 0.45);
+    transition: all 0.2s ease;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+.dream-home-planner .change-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 16px 48px rgba(245, 158, 11, 0.55);
+}
+
+.dream-home-planner .btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ===== COLOR BUTTONS ===== */
+.dream-home-planner .color-btn {
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    color: white;
+    margin: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dream-home-planner .color-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.dream-home-planner .color-btn:active {
+    transform: scale(0.95);
+}
+
+/* ===== RESULT PANEL ===== */
+.dream-home-planner #resultPanel {
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 32px 36px;
+    margin-top: 28px;
+    box-shadow: var(--shadow-md);
+    animation: dhp-slideUp 0.45s ease both;
+}
+
+.dream-home-planner #resultPanel h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--navy-mid);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dream-home-planner .result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.dream-home-planner .result-item {
+    background: var(--sky);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    border: 1.5px solid var(--card-border);
+}
+
+.dream-home-planner .result-item .res-label {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 4px;
+}
+
+.dream-home-planner .result-item .res-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.dream-home-planner .result-note {
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, rgba(74, 127, 212, 0.10), rgba(94, 147, 232, 0.05));
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--accent);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-mid);
+    line-height: 1.5;
+}
+
+/* ===== 3D HOUSE SECTION ===== */
+.dream-home-planner #threeDContainer {
+    margin-top: 28px;
+    animation: dhp-slideUp 0.45s ease both;
+}
+
+.dream-home-planner #threeDContainer h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--navy-mid);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.dream-home-planner .three-d-wrapper {
+    background: var(--card-bg);
+    border: 3px solid var(--accent);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: border-color 0.3s ease;
+}
+
+.dream-home-planner .three-d-wrapper iframe {
+    display: block;
+    width: 100%;
+    height: 500px;
+    border: none;
+}
+
+/* ===== COLOR CONTROLS ===== */
+.dream-home-planner #colorControls {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--card-border);
+}
+
+.dream-home-planner #colorControls h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+}
+
+.dream-home-planner .color-btn-wrap {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* ===== FOOTER ===== */
+.dream-home-planner footer {
+    text-align: center;
+    padding: 28px 20px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 540px) {
+    .dream-home-planner .card {
+        padding: 22px 18px;
+    }
+
+    .dream-home-planner .compass-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dream-home-planner .result-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dream-home-planner #showPlanBtn {
+        padding: 18px 36px;
+        font-size: 1.1rem;
+    }
+
+    .dream-home-planner .three-d-wrapper iframe {
+        height: 300px;
+    }
+}
